@@ -1,0 +1,23 @@
+{
+  "name": "livetrainer",
+  "version": "1.0.0",
+  "description": "GreatPathshala - webinar registration, Razorpay payment, MongoDB storage, admin panel and certificate generator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.18.0",
+    "nodemailer": "^6.9.14",
+    "pdfkit": "^0.16.0",
+    "razorpay": "^2.9.4",
+    "sharp": "^0.34.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

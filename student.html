@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student dashboard — GreatPathshala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#141534;--navy-2:#1c1e52;--ink:#25264a;--muted:#686b86;
+    --pink:#ed2468;--pink-soft:#ff6f9f;--sun:#ffb547;--mint:#1fb978;--sky:#3b82f6;
+    --rose:#fff0f5;--line:#e7e7f0;--white:#fff;
+    --shadow:0 18px 46px #1e1a5514;--shadow-lg:0 26px 60px #1e1a5522;
+    --ease:cubic-bezier(.22,.9,.32,1.28);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f8f7fc;color:var(--ink);font:16px 'DM Sans',system-ui,sans-serif}
+  h1,h2,h3{font-family:Manrope,sans-serif;margin:0}
+  a{color:inherit}
+  .wrap{max-width:900px;margin:auto;padding:28px 20px 60px}
+  .back{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--pink);text-decoration:none;font-size:14px}
+  .back:hover{text-decoration:underline}
+  .page-title{font-size:clamp(26px,4vw,34px);letter-spacing:-.04em;color:var(--navy);margin:14px 0 4px}
+  .page-sub{color:var(--muted);margin:0 0 8px;font-size:14.5px}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin-top:20px;box-shadow:var(--shadow)}
+
+  /* login card */
+  #login{max-width:460px;margin-left:auto;margin-right:auto;text-align:center;position:relative;overflow:hidden}
+  #login::before{content:"";position:absolute;top:-60px;right:-60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#ffd7e4,transparent 70%)}
+  #login .lock{width:52px;height:52px;border-radius:14px;background:linear-gradient(150deg,var(--navy),var(--navy-2));display:grid;place-items:center;margin:0 auto 14px;font-size:22px;color:#fff;box-shadow:var(--shadow)}
+  .muted{color:var(--muted);font-size:14px;line-height:1.6}
+  .field{display:grid;gap:6px;margin:16px 0;text-align:left;position:relative}
+  .field label{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+  input{padding:13px 14px;border:1px solid #d8dae6;border-radius:10px;font:inherit;width:100%;transition:border-color .2s ease,box-shadow .2s ease}
+  input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 4px #ed246820}
+  #code{letter-spacing:.6em;font:700 20px 'DM Sans',monospace;text-align:center;padding-left:20px}
+  .btn{padding:13px 18px;border:0;border-radius:10px;background:var(--pink);color:#fff;font-weight:700;cursor:pointer;width:100%;transition:transform .2s var(--ease),box-shadow .2s ease,opacity .2s ease;font-size:15px}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px #ed246848}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--navy)}
+  #msg{min-height:18px;font-size:13.5px;font-weight:600;color:var(--pink);margin:6px 0 0}
+  #msg.ok{color:var(--mint)}
+
+  /* profile */
+  .profile{display:flex;align-items:center;gap:18px;padding:26px;border-radius:20px;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;flex-wrap:wrap}
+  .profile::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#ed246830;right:-70px;top:-90px;filter:blur(2px)}
+  .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--sun));display:grid;place-items:center;font:800 24px Manrope;color:#fff;flex-shrink:0;box-shadow:0 8px 20px #ed246850;position:relative;z-index:1}
+  .profile-info{position:relative;z-index:1;flex:1;min-width:180px}
+  .profile-info .label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#ff9fc3;font-weight:800}
+  .profile-info h2{font-size:22px;margin:4px 0 0;word-break:break-word}
+  .stats{display:flex;gap:22px;position:relative;z-index:1;flex-wrap:wrap}
+  .stat{text-align:center}
+  .stat b{display:block;font:800 22px Manrope}
+  .stat small{color:#c7c9e6;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .logout{position:relative;z-index:1;background:#ffffff20;border:1px solid #ffffff35;color:#fff;padding:9px 14px;border-radius:9px;font-weight:700;font-size:13px;cursor:pointer;transition:background .2s ease}
+  .logout:hover{background:#ffffff35}
+
+  /* registrations */
+  .reg-heading{margin:30px 0 14px;font-size:20px;color:var(--navy);letter-spacing:-.02em}
+  .item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;transition:transform .25s var(--ease),box-shadow .25s ease;position:relative;overflow:hidden}
+  .item:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--pink),var(--sun))}
+  .item-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .item h3{font-size:17px;color:var(--navy)}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  .badge.paid{background:#d9f4e5;color:#086c3d}
+  .badge.pending{background:#fff3d6;color:#8a5b00}
+  .badge.failed,.badge.unpaid{background:#fde2e2;color:#a11313}
+  .item-meta{color:var(--muted);font-size:13.5px;margin:8px 0 12px;line-height:1.6}
+  .item-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .pill-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:#faf9ff;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--navy);transition:.2s ease}
+  .pill-btn:hover{border-color:var(--pink);color:var(--pink);background:var(--rose)}
+  .pill-btn.cert{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pill-btn.cert:hover{background:var(--pink-soft);border-color:var(--pink-soft);color:#fff}
+  .empty-state{text-align:center;color:var(--muted);padding:40px 20px;border:1px dashed var(--line);border-radius:16px;font-size:14.5px}
+
+  /* calendar modal */
+  .overlay{position:fixed;inset:0;background:#14153480;display:none;align-items:center;justify-content:center;z-index:50;padding:20px;backdrop-filter:blur(3px)}
+  .overlay.open{display:flex}
+  .modal{background:#fff;border-radius:20px;max-width:440px;width:100%;max-height:82vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-lg);animation:pop .28s var(--ease)}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+  .modal-head h3{font-size:17px;color:var(--navy)}
+  .modal-close{background:#f2f1fa;border:0;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--navy);flex-shrink:0}
+  .modal-close:hover{background:var(--rose);color:var(--pink)}
+  .legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:10px 0 16px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .dot.present{background:var(--mint)}
+  .dot.absent{background:#e2536b}
+  .month-block{margin-bottom:20px}
+  .month-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}
+  .cal-grid .dow{font-size:10.5px;color:var(--muted);font-weight:700;padding-bottom:2px}
+  .cal-day{aspect-ratio:1;display:grid;place-items:center;border-radius:8px;font-size:12.5px;font-weight:600;color:#b9bccd}
+  .cal-day.present{background:#d9f4e5;color:#086c3d;font-weight:800}
+  .cal-day.absent{background:#fde2e2;color:#a11313;font-weight:800}
+  .single-day{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--rose);font-size:14px;font-weight:700;color:var(--navy)}
+
+  @media(max-width:560px){
+    .wrap{padding:20px 14px 50px}
+    .card{padding:20px;border-radius:16px}
+    .profile{padding:20px;gap:14px}
+    .avatar{width:54px;height:54px;font-size:20px}
+    .profile-info h2{font-size:18px}
+    .stats{gap:16px}
+    .stat b{font-size:18px}
+    .item-top{flex-direction:column}
+    .item-actions{width:100%}
+    .pill-btn{flex:1;justify-content:center}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="index.html">← Home</a>
+  <h1 class="page-title">Student dashboard</h1>
+  <p class="page-sub">Track your courses, payments, attendance and certificates in one place.</p>
+
+  <section id="login" class="card">
+    <div class="lock">🔐</div>
+    <p class="muted">Sign in with your email to see your courses, payments, attendance calendar, and certificates.</p>
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" required placeholder="you@example.com">
+    </div>
+    <div class="field" id="codeField" hidden>
+      <label>6-digit code</label>
+      <input id="code" inputmode="numeric" maxlength="6" placeholder="••••••">
+    </div>
+    <button class="btn" id="send">Send sign-in code</button>
+    <button class="btn" id="verify" hidden style="margin-top:10px">Sign in</button>
+    <p id="msg"></p>
+  </section>
+
+  <section id="dashboard" hidden>
+    <div class="profile">
+      <div class="avatar" id="avatar">?</div>
+      <div class="profile-info">
+        <span class="label">Signed in as</span>
+        <h2 id="heading"></h2>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="statCount">0</b><small>Courses</small></div>
+        <div class="stat"><b id="statCerts">0</b><small>Certificates</small></div>
+      </div>
+      <button class="logout" id="logout">Log out</button>
+    </div>
+
+    <h3 class="reg-heading">Your registrations</h3>
+    <div id="registrations"></div>
+  </section>
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Attendance</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="legend">
+      <span><i class="dot present"></i> Present</span>
+      <span><i class="dot absent"></i> Absent</span>
+    </div>
+    <div id="calendarBody"></div>
+  </div>
+</div>
+
+<script>
+const $=x=>document.getElementById(x);
+let token=localStorage.getItem('gp_student_token')||'';
+let lastRegistrations=[];
+const msg=(t,ok=false)=>{const m=$('msg');m.textContent=t;m.className=ok?'ok':''};
+const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function request(url,o={}){
+  o.headers={...(o.headers||{}),'Content-Type':'application/json'};
+  const r=await fetch(url,o),d=await r.json();
+  if(!r.ok) throw Error(d.error||'Request failed');
+  return d;
+}
+
+function statusClass(s){
+  s=(s||'').toLowerCase();
+  if(s==='paid'||s==='completed'||s==='success') return 'paid';
+  if(s==='pending'||s==='processing') return 'pending';
+  return 'failed';
+}
+
+function initials(email){
+  const name=(email||'?').split('@')[0];
+  return name.slice(0,2).toUpperCase();
+}
+
+async function dashboard(){
+  const d=await request('/api/student/dashboard',{headers:{Authorization:'Bearer '+token}});
+  $('login').hidden=true;
+  $('dashboard').hidden=false;
+  $('heading').textContent=d.account.email;
+  $('avatar').textContent=initials(d.account.email);
+  $('statCount').textContent=d.registrations.length;
+  $('statCerts').textContent=d.registrations.filter(x=>x.certificateGenerated).length;
+  lastRegistrations=d.registrations;
+
+  const cards=d.registrations.map((x,i)=>{
+    const sc=statusClass(x.paymentStatus);
+    return `<article class="item">
+      <div class="item-top">
+        <h3>${esc(x.webinarTitle)}</h3>
+        <span class="badge ${sc}">${esc(x.paymentStatus||'unpaid')}</span>
+      </div>
+      <p class="item-meta">${esc(x.feePlan||'full')} fee plan · ${x.attendanceCount||0} session(s) attended</p>
+      <div class="item-actions">
+        <button class="pill-btn" data-cal="${i}">📅 View attendance</button>
+        ${x.certificateGenerated?`<a class="pill-btn cert" target="_blank" rel="noopener" href="${esc(x.certificateUrl)}">🎓 Open certificate</a>`:''}
+      </div>
+    </article>`;
+  }).join('');
+
+  $('registrations').innerHTML=cards||'<div class="empty-state">No registrations yet. Choose a session from the home page to get started.</div>';
+
+  document.querySelectorAll('[data-cal]').forEach(btn=>{
+    btn.addEventListener('click',()=>openCalendar(lastRegistrations[+btn.dataset.cal]));
+  });
+}
+
+/* ---------- calendar popup ---------- */
+const DOW=['S','M','T','W','T','F','S'];
+
+function buildMonthGrid(year,month,markedMap){
+  const first=new Date(year,month,1);
+  const startDow=first.getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  let cells=`<div class="cal-grid">`+DOW.map(d=>`<span class="dow">${d}</span>`).join('');
+  for(let i=0;i<startDow;i++) cells+=`<span class="cal-day"></span>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const key=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const marked=markedMap[key];
+    const cls=marked===undefined?'':(marked?'present':'absent');
+    cells+=`<span class="cal-day ${cls}">${day}</span>`;
+  }
+  cells+=`</div>`;
+  return cells;
+}
+
+function openCalendar(reg){
+  $('modalTitle').textContent=esc(reg.webinarTitle)+' — Attendance';
+  const dates=reg.attendance?.classDates||{};
+  const entries=Object.entries(dates);
+
+  if(!entries.length){
+    if(reg.attendance?.webinarPresent!==undefined){
+      $('calendarBody').innerHTML=`<div class="single-day"><span class="dot ${reg.attendance.webinarPresent?'present':'absent'}"></span> Webinar session: ${reg.attendance.webinarPresent?'Present':'Absent'}</div>`;
+    }else{
+      $('calendarBody').innerHTML=`<div class="single-day">No attendance has been recorded yet.</div>`;
+    }
+    $('overlay').classList.add('open');
+    return;
+  }
+
+  const byMonth={};
+  const markMap={};
+  entries.forEach(([date,present])=>{
+    const dt=new Date(date+'T00:00:00');
+    if(isNaN(dt)) return;
+    const key=`${dt.getFullYear()}-${dt.getMonth()}`;
+    byMonth[key]=byMonth[key]||{year:dt.getFullYear(),month:dt.getMonth()};
+    markMap[date]=!!present;
+  });
+
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let html='';
+  Object.values(byMonth).sort((a,b)=>(a.year-b.year)||(a.month-b.month)).forEach(({year,month})=>{
+    html+=`<div class="month-block"><div class="month-title">${monthNames[month]} ${year}</div>${buildMonthGrid(year,month,markMap)}</div>`;
+  });
+  $('calendarBody').innerHTML=html;
+  $('overlay').classList.add('open');
+}
+
+$('modalClose').addEventListener('click',()=>$('overlay').classList.remove('open'));
+$('overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') $('overlay').classList.remove('open'); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('overlay').classList.remove('open'); });
+
+/* ---------- auth flow ---------- */
+$('send').onclick=async()=>{
+  const btn=$('send');
+  btn.disabled=true;
+  try{
+    await request('/api/auth/request-otp',{method:'POST',body:JSON.stringify({email:$('email').value})});
+    $('codeField').hidden=false;
+    $('verify').hidden=false;
+    $('send').hidden=true;
+    msg('Check your email for the code.',true);
+  }catch(e){ msg(e.message); btn.disabled=false; }
+};
+
+$('verify').onclick=async()=>{
+  const btn=$('verify');
+  btn.disabled=true;
+  try{
+    const d=await request('/api/auth/verify-otp',{method:'POST',body:JSON.stringify({email:$('email').value,code:$('code').value})});
+    token=d.token;
+    localStorage.setItem('gp_student_token',token);
+    await dashboard();
+  }catch(e){ msg(e.message); btn.disabled=false; }
+};
+
+$('logout').addEventListener('click',()=>{
+  localStorage.removeItem('gp_student_token');
+  token='';
+  location.reload();
+});
+
+if(token) dashboard().catch(()=>localStorage.removeItem('gp_student_token'));
+</script>
+</body>
+</html>
